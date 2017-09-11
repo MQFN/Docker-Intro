@@ -49,3 +49,21 @@ A docker image is essentially made up of file systems layered over each other. E
 
 #### Docker commit command
 This command saves the changes we make in a container as a new image. When we run the command we specify which container we are committing and we need to specify the image repo and tag. The default tag is used in case we do not specify a tag. The exact syntax of this command would be `docker commit <id_of_image> <repo_name>:<tag>`. Now the repo name convention should be username followed by a slash and the name of the application that the container is supposed to run. 
+
+### Dockerfile
+- FROM: specifies what the base image should be 
+- RUN: specifies a command to run. One thing to keep in mind while using the RUN instruction is that in case of the run instruction, after each run instruction docker performs a commit command on the top writable layer of the image. So if we have 10 RUN instructions then the commit will actually happen 10 times. So multiple RUN instructions can be written in the following way:
+
+```bash
+RUN sudo apt-get install curl
+RUN sudo apt-get install python
+```
+
+However in order to avoid multiple commits one thing that can be rather done is to use `&&` in order to club multiple commands together.
+
+```bash
+RUN sudo apt-get update && apt-get install python
+```
+
+### Docker Build Command 
+Simply builds an image using the instructions in the docker file. The syntax of the docker file is `docker build [options] [path]`. The path is what is called the build context. Docker will search for the `Dockerfile` in the root of your build context. The option `-t` is used for tagging our image. So this one will be like `docker build -t [repo:tag] [path]`. So for instance an example can be like `docker build -t riflerrick/myimage:1.0 .`
